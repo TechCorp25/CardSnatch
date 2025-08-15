@@ -1,0 +1,16 @@
+{# Card view modal - pop-up shown when a card is drawn #}
+<div class="modal" id="card-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="card-title">
+  <div class="modal-backdrop" aria-hidden="true"></div>
+
+  <div class="modal-card" role="document" tabindex="-1">
+    <div class="card-face">
+      <h3 id="card-title">Card</h3>
+      <p id="card-text" aria-live="polite">Card content…</p>
+    </div>
+
+    <div class="modal-actions" role="group" aria-label="Card actions">
+      <button class="pass" id="btn-pass" type="button">Pass</button>
+      <button class="done" id="btn-done" type="button">Done</button>
+    </div>
+  </div>
+</div>
