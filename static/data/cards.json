@@ -1,0 +1,51 @@
+# app.py (only the changed/added parts)
+
+import json
+from pathlib import Path
+
+DATA_PATH = Path(__file__).parent / "static" / "data" / "cards.json"
+
+def load_cards_from_json():
+    """
+    Load cards from static/data/cards.json.
+    File format: [{"id": 1, "title": "X", "text": "Y"}, ...]
+    Returns a Python list. Falls back to generated sample if anything goes wrong.
+    """
+    try:
+        if DATA_PATH.exists():
+            with DATA_PATH.open("r", encoding="utf-8") as f:
+                data = json.load(f)
+                # Ensure minimal shape
+                cards = []
+                for i, item in enumerate(data, start=1):
+                    cards.append({
+                        "id": int(item.get("id", i)),
+                        "title": str(item.get("title", f"Card {i}")),
+                        "text": str(item.get("text", f"Content for card {i}.")),
+                    })
+                if cards:
+                    return cards
+    except Exception:
+        # Fall through to sample deck on any error
+        pass
+
+    # Fallback sample deck
+    return [
+        {"id": i+1, "title": f"Card {i+1}", "text": f"This is the content of card {i+1}."}
+        for i in range(30)
+    ]
+
+def init_game():
+    """Initialize a fresh game in the session."""
+    deck = load_cards_from_json()
+    shuffle(deck)
+    session.update({
+        "players": [
+            {"name": session.get("p1_name", "Player 1"), "score": 0},
+            {"name": session.get("p2_name", "Player 2"), "score": 0},
+        ],
+        "turn": 0,
+        "deck": deck,
+        "kept_stack": [],
+        "used_stack": [],
+    })
