@@ -1,0 +1,36 @@
+{# User registration modal - included into index.html via {% include 'modals/user_registration.html' %} #}
+<div class="modal {{ '' if not show_registration else 'show' }}"
+     id="register-modal"
+     role="dialog"
+     aria-modal="true"
+     aria-hidden="{{ 'false' if show_registration else 'true' }}"
+     aria-labelledby="register-title">
+  <div class="modal-backdrop" aria-hidden="true"></div>
+
+  <div class="modal-card" role="document" tabindex="-1">
+    <h2 id="register-title">Player Setup</h2>
+    <p class="muted">Enter names for both players to begin. Tap <strong>Save</strong> to start.</p>
+
+    <form id="register-form" autocomplete="off" novalidate>
+      <div class="players-form">
+        <div class="user-card">
+          <div class="avatar big" aria-hidden="true">👤</div>
+          <label class="sr-only" for="p1-input">Player 1 name</label>
+          <input id="p1-input" name="p1" type="text" placeholder="Player 1 name" required
+                 aria-required="true" />
+        </div>
+
+        <div class="user-card">
+          <div class="avatar big" aria-hidden="true">👤</div>
+          <label class="sr-only" for="p2-input">Player 2 name</label>
+          <input id="p2-input" name="p2" type="text" placeholder="Player 2 name" required
+                 aria-required="true" />
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <button type="submit" class="save" id="savePlayersBtn" aria-label="Save player names">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
