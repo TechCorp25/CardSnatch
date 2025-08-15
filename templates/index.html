@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+  <!-- Players Header -->
+  <header class="players">
+    <div class="player {{ 'active' if turn == 0 else '' }}" id="player-left">
+      <div class="avatar">👤</div>
+      <div class="meta">
+        <div class="name" id="p1-name">{{ players[0].name if players else 'Player 1' }}</div>
+        <div class="score"><span id="p1-score">{{ players[0].score if players else 0 }}</span> pts</div>
+      </div>
+    </div>
+    <div class="vs">vs</div>
+    <div class="player {{ 'active' if turn == 1 else '' }}" id="player-right">
+      <div class="meta right">
+        <div class="name" id="p2-name">{{ players[1].name if players else 'Player 2' }}</div>
+        <div class="score"><span id="p2-score">{{ players[1].score if players else 0 }}</span> pts</div>
+      </div>
+      <div class="avatar">👤</div>
+    </div>
+  </header>
+
+  <!-- Game Area -->
+  <main class="board">
+    <div class="stacks">
+      <div class="stack">
+        <div class="label">Deck</div>
+        <button class="card back" id="deck" aria-label="Draw a card">
+          <span class="count" id="deck-count">{{ deck_count }}</span>
+        </button>
+      </div>
+      <div class="stack">
+        <div class="label">Kept</div>
+        <div class="card back small" id="kept-stack">
+          <span class="count" id="kept-count">{{ kept_count }}</span>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="label">Used</div>
+        <div class="card back small" id="used-stack">
+          <span class="count" id="used-count">{{ used_count }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="turn-indicator">
+      <span id="turn-text">It's <strong id="turn-name">{{ players[turn].name if players else 'Player 1' }}</strong>'s turn</span>
+    </div>
+
+    <div class="actions">
+      <button id="reset" class="reset">New Game</button>
+    </div>
+  </main>
+</div>
+
+<!-- Registration Modal -->
+<div class="modal {{ '' if not show_registration else 'show' }}" id="register-modal" role="dialog" aria-modal="true" aria-hidden="{{ 'false' if show_registration else 'true' }}">
+  <div class="modal-backdrop"></div>
+  <div class="modal-card">
+    <h2>Player Setup</h2>
+    <form id="register-form">
+      <div class="players-form">
+        <div class="user-card">
+          <div class="avatar big">👤</div>
+          <input type="text" name="p1" placeholder="Player 1 name" required />
+        </div>
+        <div class="user-card">
+          <div class="avatar big">👤</div>
+          <input type="text" name="p2" placeholder="Player 2 name" required />
+        </div>
+      </div>
+      <button type="submit" class="save">Save</button>
+    </form>
+  </div>
+</div>
+
+<!-- Card Modal -->
+<div class="modal" id="card-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-backdrop"></div>
+  <div class="modal-card">
+    <div class="card-face">
+      <h3 id="card-title">Card</h3>
+      <p id="card-text">Card content...</p>
+    </div>
+    <div class="modal-actions">
+      <button class="pass" id="btn-pass">Pass</button>
+      <button class="done" id="btn-done">Done</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
