@@ -1,74 +1,87 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let currentPlayer = 1;
-    let players = { 1: { name: "", points: 0 }, 2: { name: "", points: 0 } };
-    let deck = [
-        { text: "Card 1" },
-        { text: "Card 2" },
-        { text: "Card 3" },
-        { text: "Card 4" },
-    ];
-    let usedCards = [];
-    let wonCards = [];
+// static/app.js
+const $ = (sel, root = document) => root.querySelector(sel);
+const show = (el) => el.classList.add('show');
+const hide = (el) => el.classList.remove('show');
 
-    const player1NameEl = document.getElementById("player1-name");
-    const player2NameEl = document.getElementById("player2-name");
-    const player1PointsEl = document.getElementById("player1-points");
-    const player2PointsEl = document.getElementById("player2-points");
-    const cardModal = document.getElementById("cardModal");
-    const cardContent = document.getElementById("cardContent");
-    const turnIndicator = document.getElementById("turn-indicator");
+function updateHeader(state) {
+  if (!state || !state.players) return;
+  $('#p1-score').textContent = state.players[0].score;
+  $('#p2-score').textContent = state.players[1].score;
+  $('#deck-count').textContent = state.deck_count;
+  $('#kept-count').textContent = state.kept_count;
+  $('#used-count').textContent = state.used_count;
 
-    // Handle registration save
-    document.getElementById("savePlayersBtn").addEventListener("click", function () {
-        players[1].name = document.getElementById("player1-input").value || "Player 1";
-        players[2].name = document.getElementById("player2-input").value || "Player 2";
+  const left = $('#player-left');
+  const right = $('#player-right');
+  left.classList.toggle('active', state.turn === 0);
+  right.classList.toggle('active', state.turn === 1);
+  const turnName = state.turn === 0 ? $('#p1-name').textContent : $('#p2-name').textContent;
+  $('#turn-name').textContent = turnName;
+}
 
-        player1NameEl.textContent = players[1].name;
-        player2NameEl.textContent = players[2].name;
+async function postJSON(url, body) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body || {})
+  });
+  return res.json();
+}
 
-        document.getElementById("registrationModal").style.display = "none";
-        updateTurnIndicator();
+window.addEventListener('DOMContentLoaded', () => {
+  const registerModal = $('#register-modal');
+  const cardModal = $('#card-modal');
+  const cardTitle = $('#card-title');
+  const cardText = $('#card-text');
+
+  // Registration form
+  const regForm = $('#register-form');
+  if (regForm) {
+    regForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(regForm);
+      const payload = { p1: formData.get('p1'), p2: formData.get('p2') };
+      const res = await postJSON('/register', payload);
+      if (res.ok) {
+        hide(registerModal);
+        window.location.href = res.redirect || '/';
+      }
     });
+  }
 
-    // Deck click
-    document.getElementById("deck").addEventListener("click", function () {
-        if (deck.length === 0) {
-            alert("No more cards!");
-            return;
-        }
-        let card = deck.pop();
-        cardContent.textContent = card.text;
-        cardModal.style.display = "block";
+  // Draw from deck
+  const deckBtn = $('#deck');
+  if (deckBtn) {
+    deckBtn.addEventListener('click', async () => {
+      const res = await postJSON('/next_card');
+      if (res.empty) {
+        deckBtn.disabled = true;
+        return;
+      }
+      cardTitle.textContent = res.card.title;
+      cardText.textContent = res.card.text;
+      show(cardModal);
     });
+  }
 
-    // Pass button
-    document.getElementById("passBtn").addEventListener("click", function () {
-        usedCards.push(cardContent.textContent);
-        cardModal.style.display = "none";
-        nextTurn();
-    });
+  // Pass / Done buttons
+  $('#btn-pass')?.addEventListener('click', async () => {
+    const res = await postJSON('/action', { choice: 'pass' });
+    hide(cardModal);
+    updateHeader(res);
+  });
 
-    // Done button
-    document.getElementById("doneBtn").addEventListener("click", function () {
-        players[currentPlayer].points += 1;
-        updatePoints();
-        wonCards.push(cardContent.textContent);
-        cardModal.style.display = "none";
-        nextTurn();
-    });
+  $('#btn-done')?.addEventListener('click', async () => {
+    const res = await postJSON('/action', { choice: 'done' });
+    hide(cardModal);
+    updateHeader(res);
+  });
 
-    // Helpers
-    function updatePoints() {
-        player1PointsEl.textContent = players[1].points;
-        player2PointsEl.textContent = players[2].points;
+  // Reset (New Game)
+  $('#reset')?.addEventListener('click', async () => {
+    const res = await postJSON('/reset');
+    if (res.ok) {
+      window.location.reload();
     }
-
-    function nextTurn() {
-        currentPlayer = currentPlayer === 1 ? 2 : 1;
-        updateTurnIndicator();
-    }
-
-    function updateTurnIndicator() {
-        turnIndicator.textContent = `${players[currentPlayer].name}'s turn`;
-    }
+  });
 });
