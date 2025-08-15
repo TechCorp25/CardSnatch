@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Let's get you set up — Game Setup</title>
+  <meta name="description" content="Game setup screen with mode selection and player profile placeholders." />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root { --gold: #f4b400; }
+    body { font-family: 'Poppins', sans-serif; }
+    .gold-ring {
+      box-shadow: 0 6px 0 rgba(0,0,0,0.08), 0 0 0 6px rgba(244,180,0,0.08);
+      border: 4px solid var(--gold);
+    }
+    .avatar-outer {
+      width: clamp(100px, 25vw, 140px);
+      height: clamp(100px, 25vw, 140px);
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
+      box-shadow: 0 6px 0 rgba(0,0,0,0.12);
+    }
+    .avatar-ring {
+      border: 4px solid var(--gold);
+      border-radius: 9999px;
+      padding: 6px;
+      display: inline-block;
+      background: #fff;
+    }
+    .name-underline {
+      border-bottom: 2px solid rgba(255,255,255,0.4);
+      width: 200px;
+      max-width: 60%;
+      margin: 0.6rem auto 0;
+      padding-bottom: 0.35rem;
+    }
+    .name-input {
+      background: transparent;
+      border: none;
+      color: #f2e6e8;
+      text-align: center;
+      font-size: 1.125rem;
+      font-weight: 500;
+      outline: none;
+      width: 100%;
+    }
+    .mode-btn:focus {
+      outline: 3px solid rgba(244,180,0,0.25);
+      outline-offset: 4px;
+    }
+    .huge { font-size: clamp(1.8rem, 5vw, 3rem); line-height: 1.1; }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-[#84132d] via-[#701327] to-[#4a0f16] text-gray-100">
+  <main class="min-h-screen py-10 px-4 sm:px-8 md:px-12 lg:px-20">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <header class="mb-10 text-center sm:text-left">
+        <h1 class="huge font-extrabold text-white">Let's get you set up!</h1>
+      </header>
+
+      <!-- Game Mode -->
+      <section class="mb-14">
+        <div class="max-w-xl mx-auto text-center sm:text-left">
+          <h2 class="text-2xl sm:text-3xl font-bold text-[#efe0e6] mb-3">Game Mode</h2>
+          <p class="text-base sm:text-lg text-[#d7c3c7] mb-6 sm:mb-8">
+            Select the mode you want to play with your partner
+          </p>
+
+          <div id="modes" class="flex flex-col gap-4 items-center">
+            <button class="mode-btn w-full sm:w-80 bg-[#d11745] text-white font-bold rounded-xl py-4 sm:py-5 text-lg sm:text-xl shadow-inner gold-ring" data-mode="herhim" aria-pressed="true">Her &amp; Him</button>
+            <button class="mode-btn w-full sm:w-80 bg-[#6a2333] text-[#c9aeb6] font-semibold rounded-xl py-3 sm:py-4 text-base sm:text-lg shadow-inner" data-mode="herher" aria-pressed="false">Her &amp; Her</button>
+            <button class="mode-btn w-full sm:w-80 bg-[#6a2333] text-[#c9aeb6] font-semibold rounded-xl py-3 sm:py-4 text-base sm:text-lg shadow-inner" data-mode="himhim" aria-pressed="false">Him &amp; Him</button>
+            <div class="text-center mt-4">
+              <a href="#" class="text-sm text-[#e7cfd5] underline opacity-70 hover:opacity-100">Need something else?</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Players -->
+      <section class="mb-14">
+        <div class="max-w-4xl mx-auto text-center sm:text-left">
+          <h3 class="text-2xl sm:text-3xl font-bold text-[#efe0e6] mb-3">Players</h3>
+          <p class="text-base sm:text-lg text-[#d7c3c7] mb-8">
+            Enter your names (you can modify them at any time in the player profile)
+          </p>
+
+          <!-- Responsive player layout -->
+          <div id="players-container" class="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-10 sm:gap-8">
+            <!-- Player 1 -->
+            <figure class="flex-1 text-center">
+              <div class="avatar-outer mx-auto">
+                <span class="avatar-ring player-avatar" data-gender="her"></span>
+              </div>
+              <input type="text" value="Her" class="name-input mt-4 sm:mt-6" />
+              <div class="name-underline mx-auto mt-3 sm:mt-4"></div>
+            </figure>
+
+            <!-- Player 2 -->
+            <figure class="flex-1 text-center">
+              <div class="avatar-outer mx-auto">
+                <span class="avatar-ring player-avatar" data-gender="him"></span>
+              </div>
+              <input type="text" value="Him" class="name-input mt-4 sm:mt-6" />
+              <div class="name-underline mx-auto mt-3 sm:mt-4"></div>
+            </figure>
+          </div>
+
+          <!-- Save Button -->
+          <div class="mt-10 text-center">
+            <button id="save-btn" class="w-40 bg-[#d11745] hover:bg-[#d32b54] text-white font-bold rounded-xl py-3 text-lg shadow-inner gold-ring">Save</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const avatarSVGs = {
+      her: `<svg width="112" height="112" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="32" fill="#ffffff" />
+              <path d="M32 8c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9z" fill="#000"/>
+              <path d="M15 52c0-9 9-13 17-13s17 4 17 13H15z" fill="#000"/>
+            </svg>`,
+      him: `<svg width="112" height="112" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="32" fill="#ffffff" />
+              <path d="M22 18c0-5 4-9 10-9s10 4 10 9-4 9-10 9-10-4-10-9z" fill="#000"/>
+              <path d="M12 52c0-7 10-12 20-12s20 5 20 12H12z" fill="#000"/>
+            </svg>`
+    };
+
+    let currentMode = "herhim";
+
+    function updatePlayers(mode) {
+      const avatars = document.querySelectorAll(".player-avatar");
+      const inputs = document.querySelectorAll(".name-input");
+      if (mode === "herhim") {
+        avatars[0].innerHTML = avatarSVGs.her;
+        avatars[1].innerHTML = avatarSVGs.him;
+        avatars[0].dataset.gender = "her";
+        avatars[1].dataset.gender = "him";
+        inputs[0].value = "Her";
+        inputs[1].value = "Him";
+      } else if (mode === "herher") {
+        avatars[0].innerHTML = avatarSVGs.her;
+        avatars[1].innerHTML = avatarSVGs.her;
+        avatars[0].dataset.gender = "her";
+        avatars[1].dataset.gender = "her";
+        inputs[0].value = "Her";
+        inputs[1].value = "Her";
+      } else if (mode === "himhim") {
+        avatars[0].innerHTML = avatarSVGs.him;
+        avatars[1].innerHTML = avatarSVGs.him;
+        avatars[0].dataset.gender = "him";
+        avatars[1].dataset.gender = "him";
+        inputs[0].value = "Him";
+        inputs[1].value = "Him";
+      }
+    }
+
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".mode-btn").forEach(b => {
+          b.setAttribute("aria-pressed", "false");
+          b.classList.remove("gold-ring", "bg-[#d11745]", "text-white");
+          b.classList.add("bg-[#6a2333]", "text-[#c9aeb6]");
+        });
+        btn.setAttribute("aria-pressed", "true");
+        btn.classList.add("gold-ring", "bg-[#d11745]", "text-white");
+        currentMode = btn.dataset.mode;
+        updatePlayers(currentMode);
+      });
+    });
+
+    document.querySelectorAll(".player-avatar").forEach((el, idx) => {
+      el.innerHTML = idx === 0 ? avatarSVGs.her : avatarSVGs.him;
+    });
+
+    document.getElementById("save-btn").addEventListener("click", () => {
+      const inputs = document.querySelectorAll(".name-input");
+      const avatars = document.querySelectorAll(".player-avatar");
+      const playerData = {
+        mode: currentMode,
+        players: [
+          { name: inputs[0].value.trim(), gender: avatars[0].dataset.gender },
+          { name: inputs[1].value.trim(), gender: avatars[1].dataset.gender }
+        ]
+      };
+
+      // Example backend submission
+      console.log("Saving player data:", playerData);
+      /*
+      fetch("/save-players", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(playerData)
+      })
+      .then(res => res.json())
+      .then(data => console.log("Saved successfully:", data))
+      .catch(err => console.error("Save failed:", err));
+      */
+    });
+  </script>
+</body>
+</html>
